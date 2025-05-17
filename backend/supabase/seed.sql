@@ -20,3 +20,10 @@ VALUES
   ('Rosa', 'White', 'rosa.white@example.com', '[{"skill": "Dart", "level": 3}, {"skill": "Flutter", "level": 3}, {"skill": "Firebase", "level": 2}]'),
   ('Sam', 'Lee', 'sam.lee@example.com', '[{"skill": "MATLAB", "level": 4}, {"skill": "Simulink", "level": 3}, {"skill": "Python", "level": 2}]'),
   ('Tina', 'Hughes', 'tina.hughes@example.com', '[{"skill": "R", "level": 3}, {"skill": "Shiny", "level": 3}, {"skill": "SQL", "level": 2}]');
+
+INSERT INTO app.projects
+(name, start)
+VALUES
+('Engineering', now()),
+('Human Resources', now()),
+('Design', now());
