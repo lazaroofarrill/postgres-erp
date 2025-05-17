@@ -49,8 +49,10 @@ NC='\033[0m' # No Color
 
 if [[ "$OUTPUT" == *"$EXPECT"* ]]; then
   echo -e "${GREEN} PASS ${FILE} ${NC}"
+  exit 0
 else
   echo -e "${RED} FAIL ${FILE} ${NC}\n"
   echo -e "${GREEN}expected: ${EXPECT} ${NC}"
   echo -e "${RED}received: ${OUTPUT} ${NC}"
+  exit 1
 fi
