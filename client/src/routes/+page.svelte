@@ -9,6 +9,7 @@
 			<td class="p-2 text-center">First Name</td>
 			<td class="p-2 text-center">Last Name</td>
 			<td class="p-2 text-center">Skills</td>
+			<td class="p-2 text-center">Projects</td>
 		</tr>
 	</thead>
 	<tbody>
@@ -24,6 +25,15 @@
 					{/each}
 				</div>
 			</td>
+			<td>
+				<div class="flex flex-col">
+					{#each employee.projects as project}
+					<div class={numberToTailwindBg(project.id)}>
+					{project.name}
+					</div>
+					{/each}
+				</div>
+			</td>
 		</tr>
 		{/each}
 	</tbody>
@@ -33,7 +43,7 @@
 
 </div>
 
-<div class="flex flex-row justify-center"> 
+<div class="flex flex-row justify-center "> 
 <table>
 <thead>
 	<tr class="bg-black text-white">
@@ -53,4 +63,23 @@
 <script>
 	let { data } = $props();
 	import FormattedSkill from '$lib/components/formatted-skill.svelte';
+
+function numberToTailwindBg(num) {
+  const tailwindColors = [
+    'bg-red-600',      // vivid red
+    'bg-green-600',    // vivid green
+    'bg-yellow-400',   // vivid yellow
+    'bg-blue-600',     // vivid blue
+    'bg-orange-500',   // vivid orange
+    'bg-purple-600',   // vivid purple
+    'bg-cyan-400',     // vivid cyan
+    'bg-pink-500',     // vivid pink/magenta
+    'bg-lime-400',     // vivid lime
+    'bg-rose-300',     // soft pinkish
+  ];
+
+  const index = Math.abs(num) % tailwindColors.length;
+  return tailwindColors[index];
+}
+
 </script>

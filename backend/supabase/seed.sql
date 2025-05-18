@@ -21,9 +21,33 @@ VALUES
   ('Sam', 'Lee', 'sam.lee@example.com', '[{"skill": "MATLAB", "level": 4}, {"skill": "Simulink", "level": 3}, {"skill": "Python", "level": 2}]'),
   ('Tina', 'Hughes', 'tina.hughes@example.com', '[{"skill": "R", "level": 3}, {"skill": "Shiny", "level": 3}, {"skill": "SQL", "level": 2}]');
 
-INSERT INTO app.projects
-(name, start)
-VALUES
-('Engineering', now()),
-('Human Resources', now()),
-('Design', now());
+
+DO $$
+DECLARE
+  new_id BIGINT;
+  id_list BIGINT[];
+  employee_id BIGINT;
+  idx BIGINT := 1;
+BEGIN
+  FOR new_id IN
+    INSERT INTO app.projects (name, start)
+    VALUES
+      ('Apollo 13', now()),
+      ('Code Auroro', now()),
+      ('Desert Storm', now())
+    RETURNING id
+  LOOP
+    id_list := array_append(id_list, new_id);
+  END LOOP;
+
+  FOR employee_id IN
+    SELECT id FROM app.employees
+  LOOP
+    INSERT INTO app.employee_projects (project_id, employee_id)
+    VALUES (id_list[idx],employee_id);
+    idx := ((idx)%3) + 1;
+  END LOOP;
+
+  RAISE NOTICE 'Inserted user ID: %', id_list[2];
+END;
+$$ LANGUAGE plpgsql;

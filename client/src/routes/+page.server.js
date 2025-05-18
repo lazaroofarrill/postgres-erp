@@ -1,11 +1,12 @@
 import { supabase } from '$lib/supabaseClient';
 
 export async function load() {
-	const { data } = await supabase.from('employees').select();
+	const { data: employees } = await supabase.from('employees').select();
+
 	const { data: projects } = await supabase.from('projects').select();
 
 	return {
-		employees: data ?? [],
+		employees: employees ?? [],
 		projects: projects
 	};
 }
