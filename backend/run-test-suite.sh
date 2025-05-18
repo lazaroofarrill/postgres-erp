@@ -39,6 +39,12 @@ TEMPLATE_DB_CONN=$(echo "$HOST" | sed -E "s|(postgresql://[^/]+/)[^?]+|\1${TEMPL
 
 ./seed-db.sh --host "$TEMPLATE_DB_CONN" --dir ./supabase/migrations >> /dev/null
 
+setup_end=$(date_in_ms)
+
+setup_duration=$((setup_end - start_time))
+
+echo "Test setup duration ${setup_duration}ms"
+
 for test_file in ./tests/*;do
   if [[ -f "$test_file" ]]; then
     ./spawn-test-worker.sh --host "$HOST" \
@@ -53,6 +59,6 @@ psql "$HOST" -c "DROP DATABASE $TEMPLATE_DB_NAME;" >> /dev/null
 
 end_time=$(date_in_ms)
 
-duration=$((end_time - start_time))
+total_duration=$((end_time - start_time))
 
-echo "Total testing time: ${duration}ms"
+echo "Total testing time: ${total_duration}ms"
