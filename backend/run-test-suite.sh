@@ -3,6 +3,9 @@
 
 cd $(dirname $0)
 
+alias "date_in_ms=date +%s%3N"
+start_time=$(date_in_ms)
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -h|--host)
@@ -26,15 +29,11 @@ fi
 
 TEMPLATE_DB_NAME="test_template_$(uuidgen | sed 's/-/_/g')"
 
-echo "$TEMPLATE_DB_NAME"
-
-psql "$HOST" -c "CREATE DATABASE $TEMPLATE_DB_NAME;"
+psql "$HOST" -c "CREATE DATABASE $TEMPLATE_DB_NAME;" >> /dev/null
 
 TEMPLATE_DB_CONN=$(echo "$HOST" | sed -E "s|(postgresql://[^/]+/)[^?]+|\1${TEMPLATE_DB_NAME}|")
 
-echo "$TEMPLATE_DB_CONN"
-
-./seed-db.sh --host "$TEMPLATE_DB_CONN" --dir ./supabase/migrations
+./seed-db.sh --host "$TEMPLATE_DB_CONN" --dir ./supabase/migrations >> /dev/null
 
 for test_file in ./tests/*;do
   if [[ -f "$test_file" ]]; then
@@ -46,4 +45,10 @@ done
 
 wait
 
-psql "$HOST" -c "DROP DATABASE $TEMPLATE_DB_NAME;"
+psql "$HOST" -c "DROP DATABASE $TEMPLATE_DB_NAME;" >> /dev/null
+
+end_time=$(date_in_ms)
+
+duration=$((end_time - start_time))
+
+echo "Total testing time: ${duration}ms"

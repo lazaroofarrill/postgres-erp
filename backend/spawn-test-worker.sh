@@ -1,5 +1,8 @@
 #!/bin/sh
 
+alias "date_in_ms=date +%s%3N"
+start_time=$(date_in_ms)
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -h|--host)
@@ -23,10 +26,18 @@ while [[ $# -gt 0 ]]; do
 done
 
 TEST_CASE_DB_NAME="test_case_$(uuidgen | sed 's/-/_/g')"
+
 psql "$HOST" -c "CREATE DATABASE $TEST_CASE_DB_NAME TEMPLATE $TEMPLATE_DB_NAME;" >> /dev/null
 # echo "processing: $test_file"
 
 TEST_CASE_DB_CONN=$(echo "$HOST" | sed -E "s|(postgresql://[^/]+/)[^?]+|\1${TEST_CASE_DB_NAME}|")
-./run-db-test.sh --host "$TEST_CASE_DB_CONN" --file "$TEST_FILE"
+
+test_output=$(./run-db-test.sh --host "$TEST_CASE_DB_CONN" --file "$TEST_FILE")
 
 psql "$HOST" -c "DROP DATABASE $TEST_CASE_DB_NAME;" >> /dev/null
+
+end_time=$(date_in_ms)
+
+duration=$((end_time-start_time))
+
+echo "$test_output ${duration}ms"
