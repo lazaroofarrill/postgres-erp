@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+trap 'echo "Error at line $LINENO: command \"$BASH_COMMAND\" exited with status $?"' ERR
+
 
 while [[ $# -gt 0 ]]; do
   case "$1" in

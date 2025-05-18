@@ -3,7 +3,7 @@
 		if (typeof skill?.level !== 'number' || skill?.level < 0 || skill?.level > 4) {
 			throw new Error('Invalid skill level');
 		}
-		if (typeof skill?.skill !== 'string' || (skill?.skill?.length ?? '') === 0) {
+		if (typeof skill?.name !== 'string' || (skill?.skill?.length ?? '') === 0) {
 			throw new Error('Invalid skill name');
 		}
 
@@ -20,4 +20,4 @@
 	export let skill;
 </script>
 
-<span class="{colorSkill(skill)} font-bold">{skill.skill}</span>
+<span class="{colorSkill(skill)} font-bold">{skill.name}</span>

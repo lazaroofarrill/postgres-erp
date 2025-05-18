@@ -3,6 +3,10 @@
 
 cd $(dirname $0)
 
+set -euo pipefail
+
+trap 'echo "Error at line $LINENO: command \"$BASH_COMMAND\" exited with status $?"' ERR
+
 alias "date_in_ms=date +%s%3N"
 start_time=$(date_in_ms)
 

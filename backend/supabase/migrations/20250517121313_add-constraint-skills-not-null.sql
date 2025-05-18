@@ -1,2 +1,0 @@
-ALTER TABLE app.employees
-ALTER COLUMN skills SET NOT NULL;

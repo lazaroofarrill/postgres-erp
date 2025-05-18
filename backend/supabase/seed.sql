@@ -25,7 +25,9 @@ VALUES
 DO $$
 DECLARE
   new_id BIGINT;
+  new_skill_id BIGINT;
   id_list BIGINT[];
+  skill_id_list BIGINT[];
   employee_id BIGINT;
   idx BIGINT := 1;
 BEGIN
@@ -40,11 +42,22 @@ BEGIN
     id_list := array_append(id_list, new_id);
   END LOOP;
 
+  FOR new_skill_id IN
+    INSERT INTO app.skills(name)
+    VALUES ('Java'), ('SQL'), ('React')
+    RETURNING id
+  LOOP
+    skill_id_list := array_append(skill_id_list, new_skill_id);
+  END LOOP;
+
   FOR employee_id IN
     SELECT id FROM app.employees
   LOOP
     INSERT INTO app.employee_projects (project_id, employee_id)
     VALUES (id_list[idx],employee_id);
+
+    INSERT INTO app.employee_skills (skill_id, employee_id, level)
+    VALUES (id_list[idx],employee_id, 3);
     idx := ((idx)%3) + 1;
   END LOOP;
 
