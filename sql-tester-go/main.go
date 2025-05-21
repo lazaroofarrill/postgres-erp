@@ -67,9 +67,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	connection_pool, err := pgxpool.New(
+	config, err := pgxpool.ParseConfig(*connection_string)
+	if err != nil {
+		panic(err)
+	}
+
+	connection_pool, err := pgxpool.NewWithConfig(
 		context.Background(),
-		*connection_string,
+		config,
 	)
 	if err != nil {
 		panic(err)
@@ -171,6 +176,7 @@ func runTests(conn *pgxpool.Pool, test_dir string, template_db_name string) erro
 
 	num_workers := runtime.NumCPU()
 	fmt.Printf("Starting %d workers\n", num_workers)
+	fmt.Printf("Running %d tests", len(test_files))
 
 	jobs := make(chan int, len(test_files))
 	var wg sync.WaitGroup
